@@ -1,8 +1,6 @@
 # Script Settings and Resources 
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 library(tidyverse)
-library(httr2) # Apparently this is the updated httr library 
-library(jsonlite)
 library(RedditExtractoR)
 
 # Data Import and Cleaning
@@ -15,44 +13,20 @@ rstats_urls <- find_thread_urls(
   period = "month"
 ) 
 
-## Get upvotes 
+## Get upvotes by passing the url as a vector to get_thread
 rstats_upvotes <- get_thread_content(rstats_urls$url)
 
 ### Extract dataframe from list 
 rstats_threads_df <- rstats_upvotes$threads
 
-### Select the url and upvotes 
+### Select the relevant columns and rename to post 
 rstats_upvotes_fr <- rstats_threads_df |>
   select(
-    url, 
-    upvotes
-  )
-
-### Pull title and comments from other data frame 
-rstats_title_comments <- rstats_urls |>
-  select(
-    url, 
     title, 
-    comments
-  )
+    upvotes, 
+    comments) |>
+  rename(post = title)
 
-## Inner join based on URL to get clean data set 
-rstats_clean <- inner_join(
-  rstats_title_comments,
-  rstats_upvotes_fr,
-  by = "url"
-)
-
-## Final tibble 
-rstats_tbl <- rstats_clean |>
-  select(
-    title, 
-    comments,
-    upvotes,) |> 
-  rename(
-    post = title 
-  ) 
-  
 
 
 # Visualization 
