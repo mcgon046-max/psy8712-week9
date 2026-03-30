@@ -48,8 +48,7 @@ rstats_tbl <- rstats_clean |>
   select(
     title, 
     comments,
-    upvotes,
-  ) |> 
+    upvotes,) |> 
   rename(
     post = title 
   ) 
