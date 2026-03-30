@@ -40,4 +40,11 @@ rstats_tbl |>
  ## Note: Scatter plot makes the most sense when looking at a linear correlation between two variables here. 
 
 # Analysis 
+rstats_cor <- rstats_tbl |>
+  cor.test(~ comments + upvotes, data = _)
+
+## Variables for subsequent publication section 
+df_val <- rstats_cor$parameter # Degrees of 
+cor_val <- rstats_cor$estimate
+p_val <- rstats_cor$p.value
 
