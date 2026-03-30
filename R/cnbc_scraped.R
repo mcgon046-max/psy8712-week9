@@ -46,4 +46,18 @@ cnbc_data_list <- list()
 ## Final Tibble! 
 cnbc_tbl <- bind_rows(cnbc_data_list)
 
+# Visualization 
+cnbc_tbl |>
+  group_by(source) |>
+  summarize(mean_length = mean(length, na.rm = TRUE)) |> # Grouping by source and summarizing the average length based on source, this viz is tailored for the subsequent analysis 
+  ggplot(aes(x = source, y = mean_length, fill = source)) +
+  geom_col() +
+  labs(
+    title = "Mean Length of Title by CNBC Section",
+    x = "CNBC Section", 
+    y = "Mean length of Words"
+  ) + #labels 
+  theme(legend.position = "none") # got rid of legend, redundant information
 
+# Anaylis 
+ 
