@@ -16,7 +16,7 @@ cnbc_pages <- list(
 cnbc_data_list <- list()
 
 ## For loop to get all the data
- for(section in names(cnbc_pages) {
+ for(section in names(cnbc_pages)) {
    
    # Get the current URL so that this loop reads the data every time 
    curr_url <- cnbc_pages[[section]]
@@ -29,10 +29,21 @@ cnbc_data_list <- list()
      html_elements(".Card-title") |> #CSS selector for headlines on website 
      html_text()
    
-   # Data fram
+   # Temp tibble to hold the headline data 
+   temp_tibble <- tibble(
+     headline = headlines_txt,
+     length = str_count(headline, "\\S+"), # Counts words
+     source = section # names from the list 
+   )
      
-   
+   # Put this into the main list 
+   cnbc_data_list[[section]] <- temp_tibble
      
-     
-   
+   # Sys.sleep for safety because the reddit stuff was so brutal 
+   Sys.sleep(2)
  }
+ 
+## Final Tibble! 
+cnbc_tbl <- bind_rows(cnbc_data_list)
+
+
