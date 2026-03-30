@@ -43,6 +43,18 @@ rstats_clean <- inner_join(
   by = "url"
 )
 
+## Final tibble 
+rstats_tbl <- rstats_clean |>
+  select(
+    title, 
+    comments,
+    upvotes,
+  ) |> 
+  rename(
+    post = title 
+  ) 
+  
+
 
 # Visualization 
 
