@@ -51,7 +51,7 @@ cnbc_tbl |>
   group_by(source) |>
   summarize(mean_length = mean(length, na.rm = TRUE)) |> # Grouping by source and summarizing the average length based on source, this viz is tailored for the subsequent analysis 
   ggplot(aes(x = source, y = mean_length, fill = source)) +
-  geom_col() +
+  geom_col() + # better than geom_bar for pre-summarized data
   labs(
     title = "Mean Length of Title by CNBC Section",
     x = "CNBC Section", 
@@ -59,5 +59,35 @@ cnbc_tbl |>
   ) + #labels 
   theme(legend.position = "none") # got rid of legend, redundant information
 
-# Anaylis 
- 
+# Analysis 
+anova_mod <- cnbc_tbl |>
+  aov(length ~ source, data = _) #Aov for straightforward ANOVA
+
+anova_summary <- summary(anova_mod) # Created variable to make extraction easier 
+
+## Pulling out relevant variables for publication section 
+dfn <- anova_summary[[1]]$Df[1] # Degrees of freedom numerator
+dfd <- anova_summary[[1]]$Df[2] # Degrees of freedom denominator
+f_stat <- anova_summary[[1]]$`F value`[1] # F statistc
+p_val <- anova_summary[[1]]$`Pr(>F)`[1] # P value 
+
+# Publication 
+# The results of an ANOVA comparing lengths across sources was F(3, 130) = 2.46, p = .07. This test was not statistically significant.
+signif <- ifelse(p_val < 0.05, "was", "was not") # Logic for significant statement using if else 
+
+dfn_fmt <- round(dfn) # Rounded so no digits are displayed
+dfd_fmt <- round(dfd) # same as above 
+
+f_fmt <- sprintf("%.2f", f_stat) #Formatted f statistic sprint f to keep 2 decimal places
+
+p_temp <- sprintf("%.2f", p_val) # Also keeps only 2 decimals after p-val 
+p_fmt <- sub("^0", "", p_temp) # Regex to replace leading 0 with empty string 
+
+## Paste to console based on assignment parameters 
+final_text <- paste0(
+  "The results of an ANOVA comparing lengths across sources was F(", 
+  dfn_fmt, ", ", dfd_fmt, ") = ", f_fmt, ", p = ", p_fmt, 
+  ". This test ", signif, " statistically significant."
+) 
+
+cat(final_text) # final paste to console, cat > paste here because we're concatenating the string.
