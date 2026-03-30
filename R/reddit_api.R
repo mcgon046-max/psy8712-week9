@@ -18,6 +18,32 @@ rstats_urls <- find_thread_urls(
 ## Get upvotes 
 rstats_upvotes <- get_thread_content(rstats_urls$url)
 
+### Extract dataframe from list 
+rstats_threads_df <- rstats_upvotes$threads
+
+### Select the url and upvotes 
+rstats_upvotes_fr <- rstats_threads_df |>
+  select(
+    url, 
+    upvotes
+  )
+
+### Pull title and comments from other data frame 
+rstats_title_comments <- rstats_urls |>
+  select(
+    url, 
+    title, 
+    comments
+  )
+
+## Inner join based on URL to get clean data set 
+rstats_clean <- inner_join(
+  rstats_title_comments,
+  rstats_upvotes_fr,
+  by = "url"
+)
+
+
 # Visualization 
 
 # Analysis 
